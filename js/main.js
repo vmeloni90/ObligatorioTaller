@@ -65,7 +65,7 @@ function escribirSelectRubros(jsonResponse) {
   const rubrosOrdenados = ordenarRubros(rub);
 
   for (let rubro of rubrosOrdenados) {
-    if (rubro.tipo == "gasto"){
+    if (rubro.tipo == "gasto") {
       rubrosGastos += `<ion-select-option value=${rubro.id}>${rubro.nombre}</ion-select-option>`;
     } else if (rubro.tipo == "ingreso") {
       rubrosIngresos += `<ion-select-option value=${rubro.id}>${rubro.nombre}</ion-select-option>`;
@@ -191,7 +191,6 @@ function guardarElemento() {
   $.formNuevoIngreso = document.querySelector("#formNuevoIngreso");
   $.formNuevoGasto = document.querySelector("#formNuevoGasto");
   $.logOut = document.querySelector("#btnLogOut");
-
 }
 
 // AGREGAR EVENTOS
@@ -205,8 +204,6 @@ function agregarEventos() {
   $.formNuevoIngreso.addEventListener("submit", manejarIngreso);
   $.formNuevoGasto.addEventListener("submit", manejarGasto);
   $.logOut.addEventListener("click", manejarLogOut);
-
-
 }
 
 // CERRAR MENU PRINCIPAL AL SELECCIONAR UN ITEM
@@ -274,9 +271,11 @@ function manejarRuta(event) {
         mostrarPaginas("#page-menu");
         break;
       case "/ingresos":
+        precargaSelectRubros();
         mostrarPaginas("#page-ingresos");
         break;
       case "/gastos":
+        precargaSelectRubros();
         mostrarPaginas("#page-gastos");
         break;
       case "/movimientos":
@@ -613,7 +612,7 @@ function movimiento(movimientos) {
   console.log("movimientos", movimientos);
 }
 
-//Log out 
+//Log out
 function manejarLogOut() {
   token = null;
   guardarSesionUsuario(token);
