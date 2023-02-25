@@ -59,13 +59,20 @@ function ordenarRubros(jsonResponse) {
 // Escribir rubros html
 function escribirSelectRubros(jsonResponse) {
   const rub = jsonResponse.rubros;
-  let optionsHtml = "";
+  let rubrosGastos = "";
+  let rubrosIngresos = "";
+
   const rubrosOrdenados = ordenarRubros(rub);
 
   for (let rubro of rubrosOrdenados) {
-    optionsHtml += `<ion-select-option value=${rubro.id}>${rubro.nombre}</ion-select-option>`;
+    if (rubro.tipo == "gasto"){
+      rubrosGastos += `<ion-select-option value=${rubro.id}>${rubro.nombre}</ion-select-option>`;
+    } else if (rubro.tipo == "ingreso") {
+      rubrosIngresos += `<ion-select-option value=${rubro.id}>${rubro.nombre}</ion-select-option>`;
+    }
   }
-  document.querySelector("#selCategoria").innerHTML = optionsHtml;
+  document.querySelector("#selRubros").innerHTML = rubrosGastos;
+  document.querySelector("#selCategoria").innerHTML = rubrosIngresos;
 }
 
 //*************----Precarga Departamentos----*************/
@@ -182,6 +189,9 @@ function guardarElemento() {
   $.formRegistro = document.querySelector("#formRegistrarUsuario");
   $.formLogin = document.querySelector("#formLoginUsuario");
   $.formNuevoIngreso = document.querySelector("#formNuevoIngreso");
+  $.formNuevoGasto = document.querySelector("#formNuevoGasto");
+  $.logOut = document.querySelector("#btnLogOut");
+
 }
 
 // AGREGAR EVENTOS
@@ -193,6 +203,10 @@ function agregarEventos() {
   $.formRegistro.addEventListener("submit", manejarRegistroUsuario);
   $.formLogin.addEventListener("submit", manejarLoginUsuario);
   $.formNuevoIngreso.addEventListener("submit", manejarIngreso);
+  $.formNuevoGasto.addEventListener("submit", manejarGasto);
+  $.logOut.addEventListener("click", manejarLogOut);
+
+
 }
 
 // CERRAR MENU PRINCIPAL AL SELECCIONAR UN ITEM
@@ -515,6 +529,59 @@ function ingresos(ingreso) {
     throw ingreso.error;
   }
 }
+// --------------------------------------------
+// -------- Gastos -------------
+// --------------------------------------------
+
+function manejarGasto(e) {
+  e.preventDefault();
+  const datos = obtenerDatosGasto();
+  registrarGasto(datos);
+}
+
+function obtenerDatosGasto() {
+  return {
+    idUsuario: idUser,
+    concepto: $.formNuevoGasto.querySelector("#inpConcepto").value,
+    rubro: $.formNuevoGasto.querySelector("#selRubros").value,
+    total: $.formNuevoGasto.querySelector("#inpTotal").value,
+    medio: $.formNuevoGasto.querySelector("#selMedioPago").value,
+    //fecha:
+  };
+}
+
+function registrarGasto(gasto) {
+  const headers = {
+    "Content-Type": "application/json",
+    apikey: token,
+  };
+
+  const data = {
+    concepto: gasto.concepto,
+    rubro: gasto.rubro,
+    total: gasto.total,
+    medio: gasto.medio,
+  };
+
+  fetch(`${baseUrl}/movimientos.php`, {
+    method: "POST",
+    headers: headers,
+    body: JSON.stringify(data),
+  })
+    .then(getJsonBody)
+    .then(gastos)
+    .catch(mostrarError);
+}
+
+function gastos(gasto) {
+  console.log("gasto", gasto);
+  token = gasto.apikey;
+  if (gasto.codigo === 200) {
+    navegar("/menu");
+  } else {
+    throw gasto.error;
+  }
+}
 
 // --------------------------------------------
 // -------- Obtener movimientos -------------
@@ -544,4 +611,12 @@ function obtenerMovimientos() {
 function movimiento(movimientos) {
   token = movimientos.apikey;
   console.log("movimientos", movimientos);
+}
+
+//Log out 
+function manejarLogOut() {
+  token = null;
+  guardarSesionUsuario(token);
+  guardarIdUsuario(null);
+  navegar("/");
 }

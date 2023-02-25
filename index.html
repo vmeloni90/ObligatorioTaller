@@ -72,6 +72,12 @@
           <!--Contenido-->
           <ion-header>
             <ion-toolbar color="primary">
+              <ion-buttons slot="primary">
+                <ion-button id = "btnLogOut" fill="outline">
+                  Cerrar Sesion
+                  <ion-icon slot="end" name="log-out"></ion-icon>
+                </ion-button>
+              </ion-buttons>
               <ion-title>Menu</ion-title>
               <ion-buttons slot="start">
                 <ion-menu-button menu="menu-principal"></ion-menu-button>
@@ -269,6 +275,15 @@
           <!--Contenido-->
           <ion-header>
             <ion-toolbar color="primary">
+              <ion-buttons slot="start">
+                <ion-back-button default-href="/menu"></ion-back-button>
+              </ion-buttons>
+              <ion-buttons slot="primary">
+                <ion-button id = "btnLogOut" fill="outline">
+                  Cerrar Sesion
+                  <ion-icon slot="end" name="log-out"></ion-icon>
+                </ion-button>
+              </ion-buttons>
               <ion-title>Ingresos</ion-title>
               <ion-buttons slot="start">
                 <ion-menu-button menu="menu-principal"></ion-menu-button>
@@ -326,7 +341,6 @@
               </ion-button>
             </form>
           </ion-content>
-
           <!--Footer-->
           <ion-footer>
             <ion-toolbar color="primary">
@@ -340,6 +354,15 @@
           <!--Contenido-->
           <ion-header>
             <ion-toolbar color="primary">
+              <ion-buttons slot="start">
+                <ion-back-button default-href="/menu"></ion-back-button>
+              </ion-buttons>
+              <ion-buttons slot="primary">
+                <ion-button id = "btnLogOut" fill="outline">
+                  Cerrar Sesion
+                  <ion-icon slot="end" name="log-out"></ion-icon>
+                </ion-button>
+              </ion-buttons>
               <ion-title>Gastos</ion-title>
               <ion-buttons slot="start">
                 <ion-menu-button menu="menu-principal"></ion-menu-button>
@@ -347,9 +370,55 @@
             </ion-toolbar>
           </ion-header>
           <ion-content class="ion-padding-horizontal">
-            <h1 class="ion-text-center">Nuevo Ingreso</h1>
+            <h1 class="ion-text-center">Nuevo Gasto</h1>
+            <form id="formNuevoGasto">
+              <ion-item>
+                <ion-label position="floating">Concepto</ion-label>
+                <ion-input
+                  placeholder="Ingrese concepto"
+                  id="inpConcepto"
+                ></ion-input>
+              </ion-item>
+              <ion-item>
+                <ion-label>Rubro</ion-label>
+                <ion-select value="" id="selRubros"> </ion-select>
+              </ion-item>
+              <ion-item>
+                <ion-label position="floating">Total</ion-label>
+                <ion-input
+                  placeholder="Ingrese total"
+                  id="inpTotal"
+                ></ion-input>
+              </ion-item>
+              <ion-item>
+                <ion-label>Medio de pago</ion-label>
+                <ion-select value="" id="selMedioPago">
+                  <ion-select-option value="Efectivo"
+                    >Efectivo</ion-select-option
+                  >
+                  <ion-select-option value="Tarjeta debito"
+                    >Tarjeta debito</ion-select-option
+                  >
+                  <ion-select-option value="Tarjeta credito"
+                    >Tarjeta credito</ion-select-option
+                  >
+                </ion-select>
+              </ion-item>
+              <ion-item>
+                <ion-label>Seleccionar Fecha:</ion-label>
+              </ion-item>
+              <ion-button
+                type="submit"
+                color="primary"
+                expand="block"
+                id="btnNuevoGasto"
+                shape="round"
+              >
+                <ion-icon name="person-add-outline" slot="start"></ion-icon>
+                Agregar
+              </ion-button>
+            </form>
           </ion-content>
-
           <!--Footer-->
           <ion-footer>
             <ion-toolbar color="primary">
@@ -363,6 +432,15 @@
           <!--Contenido-->
           <ion-header>
             <ion-toolbar color="primary">
+              <ion-buttons slot="start">
+                <ion-back-button default-href="/menu"></ion-back-button>
+              </ion-buttons>
+              <ion-buttons slot="primary">
+                <ion-button id = "btnLogOut" fill="outline">
+                  Cerrar Sesion
+                  <ion-icon slot="end" name="log-out"></ion-icon>
+                </ion-button>
+              </ion-buttons>
               <ion-title>Movimientos</ion-title>
               <ion-buttons slot="start">
                 <ion-menu-button menu="menu-principal"></ion-menu-button>
