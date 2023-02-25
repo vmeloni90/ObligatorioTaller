@@ -29,138 +29,370 @@
       <ion-router>
         <ion-route url="/" component="page-login"></ion-route>
         <ion-route url="/registro" component="page-registro"></ion-route>
+        <ion-route url="/menu" component="page-menu"></ion-route>
+        <ion-route url="/ingresos" component="page-ingresos"></ion-route>
+        <ion-route url="/gastos" component="page-gastos"></ion-route>
+        <ion-route url="/movimientos" component="page-movimientos"></ion-route>
+        <ion-route
+          url="/menuPrincipal"
+          component="page-menuPrincipal"
+        ></ion-route>
       </ion-router>
 
       <ion-router-outlet></ion-router-outlet>
 
-      <!--Pagina - Registro-->
-      <ion-page class="ion-page" id="page-registro">
-        <!--Contenido-->
+      <!--Pagina - MenuPrincipal-->
+      <ion-menu content-id="menu-principal-contenido" menu-id="menu-principal">
         <ion-header>
-          <ion-toolbar color="primary">
-            <ion-title>Registrar</ion-title>
+          <ion-toolbar>
+            <ion-title>Menu</ion-title>
           </ion-toolbar>
         </ion-header>
         <ion-content>
-          <h1 class="ion-text-center">Nuevo usuario</h1>
+          <ion-list>
+            <ion-item href="/menu">
+              <ion-label>Menu</ion-label>
+            </ion-item>
+            <ion-item href="/ingresos">
+              <ion-label>Ingresos</ion-label>
+            </ion-item>
+            <ion-item href="/gastos">
+              <ion-label>Gastos</ion-label>
+            </ion-item>
+            <ion-item href="/movimientos">
+              <ion-label>Movimientos</ion-label>
+            </ion-item>
+          </ion-list>
+        </ion-content>
+      </ion-menu>
 
-          <form id="formRegistrarUsuario">
-            <ion-item>
-              <ion-label position="floating">Usuario</ion-label>
-              <ion-input
-                placeholder="Ingrese usuario"
-                id="inpUsuario"
-              ></ion-input>
-            </ion-item>
-            <ion-item>
-              <ion-label position="floating">Password</ion-label>
-              <ion-input
-                placeholder="Ingrese password"
-                id="inpPassword"
-              ></ion-input>
-            </ion-item>
-            <ion-item>
-              <ion-label>Departamento</ion-label>
-              <ion-select value="" id="selDepartamento">
-                <ion-select-option value=""
-                  >Seleccione departamento</ion-select-option
-                >
-              </ion-select>
-            </ion-item>
+      <ion-content id="menu-principal-contenido">
+        <!--Pagina - Menu-->
+        <ion-page class="ion-page" id="page-menu">
+          <!--Contenido-->
+          <ion-header>
+            <ion-toolbar color="primary">
+              <ion-title>Menu</ion-title>
+              <ion-buttons slot="start">
+                <ion-menu-button menu="menu-principal"></ion-menu-button>
+              </ion-buttons>
+            </ion-toolbar>
+          </ion-header>
+          <ion-content>
+            <h1 class="ion-text-center">Menu</h1>
+            <ion-grid [fixed]="true">
+              <ion-row>
+                <ion-col>
+                  <ion-button
+                    size="large"
+                    expand="block"
+                    shape="round"
+                    href="/ingresos"
+                    >Ingresos
+                    <ion-icon name="trending-up-outline" slot="end"></ion-icon>
+                  </ion-button>
+                </ion-col>
+              </ion-row>
+              <ion-row>
+                <ion-col>
+                  <ion-button
+                    size="large"
+                    expand="block"
+                    shape="round"
+                    href="/gastos"
+                    >Gastos
+                    <ion-icon
+                      name="trending-down-outline"
+                      slot="end"
+                    ></ion-icon>
+                  </ion-button>
+                </ion-col>
+              </ion-row>
+
+              <ion-row>
+                <ion-col>
+                  <ion-button
+                    size="large"
+                    expand="block"
+                    shape="round"
+                    href="/movimientos"
+                    >Movimientos
+                    <ion-icon
+                      name="swap-horizontal-outline"
+                      slot="end"
+                    ></ion-icon>
+                  </ion-button>
+                </ion-col>
+              </ion-row>
+            </ion-grid>
+          </ion-content>
+
+          <!--Footer-->
+          <ion-footer>
+            <ion-toolbar color="primary">
+              <ion-title class="ion-text-center">Obligatorio 2023</ion-title>
+            </ion-toolbar>
+          </ion-footer>
+        </ion-page>
+
+        <!--Pagina - Registro-->
+        <ion-page class="ion-page" id="page-registro">
+          <!--Contenido-->
+          <ion-header>
+            <ion-toolbar color="primary">
+              <ion-title>Registrar</ion-title>
+
+              <ion-buttons slot="start"> </ion-buttons>
+            </ion-toolbar>
+          </ion-header>
+          <ion-content class="ion-padding-horizontal">
+            <h1 class="ion-text-center">Nuevo usuario</h1>
+
+            <form id="formRegistrarUsuario">
+              <ion-item>
+                <ion-label position="floating">Usuario</ion-label>
+                <ion-input
+                  placeholder="Ingrese usuario"
+                  id="inpUsuario"
+                ></ion-input>
+              </ion-item>
+              <ion-item>
+                <ion-label position="floating">Password</ion-label>
+                <ion-input
+                  placeholder="Ingrese password"
+                  id="inpPassword"
+                ></ion-input>
+              </ion-item>
+              <ion-item>
+                <ion-label>Departamento</ion-label>
+                <ion-select value="" id="selDepartamento"> </ion-select>
+              </ion-item>
               <ion-item>
                 <ion-label>Ciudad</ion-label>
-                <ion-select value="" id="selCiudad">
-                  <ion-select-option value=""
-                    >Seleccione ciudad</ion-select-option>
-                </ion-select>
+                <ion-select value="" id="selCiudad"> </ion-select>
               </ion-item>
-              <ion-col size="4"></ion-col>
               <ion-button
+                type="submit"
                 color="primary"
+                expand="block"
                 id="btn_login"
                 shape="round"
-                href="/"
               >
-              <ion-icon name="person-add-outline" slot="start"></ion-icon>
-              Registrar
-            </ion-button>
-          </form>
-        </ion-content>
+                <ion-icon name="person-add-outline" slot="start"></ion-icon>
+                Registrar
+              </ion-button>
+            </form>
+            <ion-row>
+              <ion-col size="12">
+                Ya tienes cuenta?
+                <ion-router-link href="/" class="underline"
+                  >Ingresa aqui
+                </ion-router-link>
+              </ion-col>
+            </ion-row>
+          </ion-content>
 
-        <!--Footer-->
-        <ion-footer>
-          <ion-toolbar color="primary">
-            <ion-title class="ion-text-center">Obligatorio 2023</ion-title>
-          </ion-toolbar>
-        </ion-footer>
-      </ion-page>
+          <!--Footer-->
+          <ion-footer>
+            <ion-toolbar color="primary">
+              <ion-title class="ion-text-center">Obligatorio 2023</ion-title>
+            </ion-toolbar>
+          </ion-footer>
+        </ion-page>
 
-      <!--Pagina - Login-->
-      <ion-page class="ion-page" id="page-home">
-        <!--Contenido-->
-        <ion-header>
-          <ion-toolbar color="primary">
-            <ion-title class="ion-text-center">Login</ion-title>
-          </ion-toolbar>
-        </ion-header>
-        <ion-content>
-          <h1 class="ion-text-center">Iniciar sesión</h1>
-          
-              <form id="formLoginUsuario"></form>
-                <ion-item>
-                  <ion-label position="floating">Usuario</ion-label>
-                  <ion-input
-                    placeholder="Ingrese usuario"
-                    id="inp_usuario"
-                  ></ion-input>
-                </ion-item>
-                <ion-item>
-                  <ion-label position="floating">Password</ion-label>
-                  <ion-input
-                    type="password"
-                    placeholder="Ingrese contrasena"
-                    id="inp_password"
-                  ></ion-input>
-                  <ion-icon
-                    name="eye-off-outline"
-                    id="mostrar_pwd"
-                    slot="end"
-                  ></ion-icon>
-                </ion-item>
+        <!--Pagina - Login-->
+        <ion-page class="ion-page" id="page-login">
+          <!--Contenido-->
+          <ion-header>
+            <ion-toolbar color="primary">
+              <ion-title>Login</ion-title>
+              <ion-buttons slot="start"> </ion-buttons>
+            </ion-toolbar>
+          </ion-header>
+          <ion-content class="ion-padding-horizontal">
+            <h1 class="ion-text-center">Iniciar sesión</h1>
 
-                <ion-grid>
-                  <ion-row>
-                    <ion-col size="4">
-                      <ion-button
-                        color="primary"
-                        expand="block"
-                        id="btn_login"
-                        shape="round"
-                        >Login
-                        <ion-icon name="finger-print-outline" slot="start"></ion-icon>
-                      </ion-button>
-                    </ion-col>
-                  </ion-row>
-              
-                  <ion-row>
-                    <ion-col size="12">
-                      No tiene cuenta?
-                      <ion-router-link href="/registro" class="underline"
-                        >Registrarse aqui
-                      </ion-router-link>
-                    </ion-col>
-                  </ion-row>
-                </ion-grid>
-              </form>
-        </ion-content>
+            <form id="formLoginUsuario">
+              <ion-item>
+                <ion-label position="floating">Usuario</ion-label>
+                <ion-input
+                  placeholder="Ingrese usuario"
+                  id="inpUsuario"
+                ></ion-input>
+              </ion-item>
+              <ion-item>
+                <ion-label position="floating">Password</ion-label>
+                <ion-input
+                  type="password"
+                  placeholder="Ingrese password"
+                  id="inpPassword"
+                ></ion-input>
+                <ion-icon
+                  name="eye-off-outline"
+                  id="mostrar_pwd"
+                  slot="end"
+                ></ion-icon>
+              </ion-item>
 
-        <!--Footer-->
-        <ion-footer>
-          <ion-toolbar color="primary">
-            <ion-title class="ion-text-center">Obligatorio 2023</ion-title>
-          </ion-toolbar>
-        </ion-footer>
-      </ion-page>
+              <ion-button
+                type="submit"
+                color="primary"
+                expand="block"
+                id="btn_login"
+                shape="round"
+              >
+                <ion-icon name="finger-print-outline" slot="start"></ion-icon>
+                Login
+              </ion-button>
+            </form>
+
+            <ion-row>
+              <ion-col size="12">
+                No tiene cuenta?
+                <ion-router-link href="/registro" class="underline"
+                  >Registrarse aqui
+                </ion-router-link>
+              </ion-col>
+            </ion-row>
+          </ion-content>
+
+          <!--Footer-->
+          <ion-footer>
+            <ion-toolbar color="primary">
+              <ion-title class="ion-text-center">Obligatorio 2023</ion-title>
+            </ion-toolbar>
+          </ion-footer>
+        </ion-page>
+
+        <!--Pagina - Ingresos-->
+        <ion-page class="ion-page" id="page-ingresos">
+          <!--Contenido-->
+          <ion-header>
+            <ion-toolbar color="primary">
+              <ion-title>Ingresos</ion-title>
+              <ion-buttons slot="start">
+                <ion-menu-button menu="menu-principal"></ion-menu-button>
+              </ion-buttons>
+            </ion-toolbar>
+          </ion-header>
+          <ion-content class="ion-padding-horizontal">
+            <h1 class="ion-text-center">Nuevo ingreso</h1>
+
+            <form id="formNuevoIngreso">
+              <ion-item>
+                <ion-label position="floating">Concepto</ion-label>
+                <ion-input
+                  placeholder="Ingrese concepto"
+                  id="inpConcepto"
+                ></ion-input>
+              </ion-item>
+              <ion-item>
+                <ion-label>Categoria</ion-label>
+                <ion-select value="" id="selCategoria"> </ion-select>
+              </ion-item>
+              <ion-item>
+                <ion-label position="floating">Total</ion-label>
+                <ion-input
+                  placeholder="Ingrese total"
+                  id="inpTotal"
+                ></ion-input>
+              </ion-item>
+              <ion-item>
+                <ion-label>Medio de pago</ion-label>
+                <ion-select value="" id="selMedioPago">
+                  <ion-select-option value="Efectivo"
+                    >Efectivo</ion-select-option
+                  >
+                  <ion-select-option value="Tarjeta debito"
+                    >Tarjeta debito</ion-select-option
+                  >
+                  <ion-select-option value="Tarjeta credito"
+                    >Tarjeta credito</ion-select-option
+                  >
+                </ion-select>
+              </ion-item>
+              <ion-item>
+                <ion-label>Seleccionar Fecha:</ion-label>
+              </ion-item>
+              <ion-button
+                type="submit"
+                color="primary"
+                expand="block"
+                id="btnNuevoIngreso"
+                shape="round"
+              >
+                <ion-icon name="person-add-outline" slot="start"></ion-icon>
+                Agregar
+              </ion-button>
+            </form>
+          </ion-content>
+
+          <!--Footer-->
+          <ion-footer>
+            <ion-toolbar color="primary">
+              <ion-title class="ion-text-center">Obligatorio 2023</ion-title>
+            </ion-toolbar>
+          </ion-footer>
+        </ion-page>
+
+        <!--Pagina - Gastos-->
+        <ion-page class="ion-page" id="page-gastos">
+          <!--Contenido-->
+          <ion-header>
+            <ion-toolbar color="primary">
+              <ion-title>Gastos</ion-title>
+              <ion-buttons slot="start">
+                <ion-menu-button menu="menu-principal"></ion-menu-button>
+              </ion-buttons>
+            </ion-toolbar>
+          </ion-header>
+          <ion-content class="ion-padding-horizontal">
+            <h1 class="ion-text-center">Nuevo Ingreso</h1>
+          </ion-content>
+
+          <!--Footer-->
+          <ion-footer>
+            <ion-toolbar color="primary">
+              <ion-title class="ion-text-center">Obligatorio 2023</ion-title>
+            </ion-toolbar>
+          </ion-footer>
+        </ion-page>
+
+        <!--Pagina - Movimientos-->
+        <ion-page class="ion-page" id="page-movimientos">
+          <!--Contenido-->
+          <ion-header>
+            <ion-toolbar color="primary">
+              <ion-title>Movimientos</ion-title>
+              <ion-buttons slot="start">
+                <ion-menu-button menu="menu-principal"></ion-menu-button>
+              </ion-buttons>
+            </ion-toolbar>
+          </ion-header>
+          <ion-content class="ion-padding-horizontal">
+            <h1 class="ion-text-center">Mis movimientos</h1>
+            <ion-card>
+              <ion-card-header>
+                <ion-card-title>Concepto gasto/ingreso</ion-card-title>
+              </ion-card-header>
+
+              <ion-card-content>Categoria:</ion-card-content>
+              <ion-card-content>Fecha:</ion-card-content>
+              <ion-card-content>Medio de pago:</ion-card-content>
+              <ion-card-content>Total: $ </ion-card-content>
+
+              <ion-button fill="clear" color="danger">Eliminar</ion-button>
+            </ion-card>
+          </ion-content>
+
+          <!--Footer-->
+          <ion-footer>
+            <ion-toolbar color="primary">
+              <ion-title class="ion-text-center">Obligatorio 2023</ion-title>
+            </ion-toolbar>
+          </ion-footer>
+        </ion-page>
+      </ion-content>
     </ion-app>
     <script src="./js/utils.js"></script>
     <script src="./js/main.js"></script>
