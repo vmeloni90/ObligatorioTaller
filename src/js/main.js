@@ -16,7 +16,6 @@ function iniciarApp() {
 function precargarValores() {
   precargarSelectDepartamentos();
   precargaSelectCiudades();
-  precargaSelectRubros();
 }
 
 //*****************Precarga Rubros***********************/
@@ -39,7 +38,6 @@ function precargaSelectRubros() {
 // then rubros
 function listaRubros(rubro) {
   escribirSelectRubros(rubro);
-  token = rubro.apikey;
   console.log(rubro);
 }
 
@@ -190,9 +188,10 @@ function guardarElemento() {
   $.formLogin = document.querySelector("#formLoginUsuario");
   $.formNuevoIngreso = document.querySelector("#formNuevoIngreso");
   $.formNuevoGasto = document.querySelector("#formNuevoGasto");
-  $.seccionIngresos = document.querySelector("#ingresos");
-  $.seccionGastos = document.querySelector("#gastos");
+  $.rubros = document.querySelectorAll("#cargaRubros");
   $.logOut = document.querySelectorAll("#btnLogOut");
+
+
 }
 
 // AGREGAR EVENTOS
@@ -205,11 +204,14 @@ function agregarEventos() {
   $.formLogin.addEventListener("submit", manejarLoginUsuario);
   $.formNuevoIngreso.addEventListener("submit", manejarIngreso);
   $.formNuevoGasto.addEventListener("submit", manejarGasto);
-  $.seccionIngresos.addEventListener("click", precargaSelectRubros);
-  $.seccionGastos.addEventListener("click", precargaSelectRubros);
-  $.logOut.forEach((btn) => {
-    btn.addEventListener("click", manejarLogOut);
+  $.rubros.forEach((rubro) =>{
+    rubro.addEventListener("click", precargaSelectRubros)
   });
+  $.logOut.forEach((btn) =>{
+    btn.addEventListener("click", manejarLogOut)
+  });
+
+
 }
 
 // CERRAR MENU PRINCIPAL AL SELECCIONAR UN ITEM
@@ -286,10 +288,6 @@ function manejarRuta(event) {
         iniciarPageListadoMovimientos();
         mostrarPaginas("#page-movimientos");
         break;
-      case "/movimientos-detalle":
-        iniciarPageListadoMovimientosDetalle();
-        mostrarPaginas("#page-movimientos-detalle");
-        break;
     }
   }
 }
@@ -333,7 +331,7 @@ function registrarUsuario(usuario) {
     idCiudad: usuario.idCiudad,
   };
 
-  fetch(`${baseUrl}/usuarios.php`, {
+ /* fetch(`${baseUrl}/usuarios.php`, {
     method: "POST",
     headers: headers,
     body: JSON.stringify(data),
@@ -341,17 +339,55 @@ function registrarUsuario(usuario) {
     .then(getJsonBody)
     .then(registro)
     .catch(mostrarError);
+}*/
+fetchUsuarios(data)
+    .then(function (jsonReposponse) {
+      console.log("then registro", jsonReposponse);
+      if (jsonReposponse.codigo === 200) {
+        navegar("/");
+        mostrarToastSuccess("Usuario registrado con éxito");
+      } else {
+        throw jsonReposponse.mensaje;
+      }
+    })
+    .catch(mostrarError);
+}
+function fetchUsuarios(data) {
+  return fetchPost(`${baseUrl}/usuarios.php`, data);
+}
+function fetchPost(url, data) {
+  const headers = {
+    "Content-Type": "application/json",
+  };
+
+  return fetch(url, {
+    method: "POST",
+    headers: headers,
+    body: JSON.stringify(data),
+  }).then(getJsonBody);
+}
+function mostrarToastSuccess(mensaje) {
+  mostrarToast(mensaje, "success");
+}
+function mostrarToast(mensaje, color) {
+  const $toast = document.createElement("ion-toast");
+  $toast.message = mensaje;
+  $toast.duration = 3000;
+  $toast.color = color;
+
+  document.body.appendChild($toast);
+  $toast.present();
 }
 
 // then Registro
-function registro(registro) {
+/*function registro(registro) {
   console.log("registro", registro);
   if (registro.codigo === 200) {
     navegar("/");
   } else {
     throw registro.error;
   }
-}
+}*/
 
 // LOGIN USUARIO
 function loginUsuario(usuario) {
@@ -369,14 +405,25 @@ function loginUsuario(usuario) {
     headers: headers,
     body: JSON.stringify(data),
   })
-    .then(getJsonBody)
-    .then(login)
+    .then(function (rawResponse) {
+      return rawResponse.json();
+    })
+    .then(function (jsonReposponse) {
+      console.log("then login", jsonReposponse);
+      console.log(jsonReposponse.codigo);
+      console.log(jsonReposponse.apiKey);
+      if (jsonReposponse.codigo === 200) {
+        guardarSesionUsuario(jsonReposponse.apiKey);
+        navegar("/menu");
+      } else {
+        throw jsonReposponse.mensaje;
+      }
+    })
     .catch(mostrarError);
 }
 
 // then Login  -
-function login(responseJson) {
-  console.log("then login", responseJson);
+/*function login(responseJson) {
   if (responseJson.codigo === 200) {
     guardarSesionUsuario(responseJson.apiKey);
     guardarIdUsuario(responseJson.id);
@@ -384,7 +431,7 @@ function login(responseJson) {
   } else {
     throw login.error;
   }
-}
+}*/
 
 // OBTENER USUARIOS POR DEPARTAMENTOS
 function obtenerUsuariosPorDepartamentos() {
@@ -405,7 +452,6 @@ function obtenerUsuariosPorDepartamentos() {
 // then usuariosPorDepartamentos
 function listaUsuariosPorDepartamentos(usuariosPorDep) {
   console.log("usuariosPorDepartamentos", usuariosPorDep);
-  token = usuariosPorDep.apiKey;
 }
 
 // OBTENER CAJEROS
@@ -490,7 +536,6 @@ function obteneridUsuario() {
 function manejarIngreso(e) {
   e.preventDefault();
   const datos = obtenerDatosIngreso();
-  console.log("ingreso", datos);
   registrarIngreso(datos);
 }
 
@@ -501,14 +546,15 @@ function obtenerDatosIngreso() {
     categoria: $.formNuevoIngreso.querySelector("#selCategoria").value,
     total: $.formNuevoIngreso.querySelector("#inpTotal").value,
     medio: $.formNuevoIngreso.querySelector("#selMedioPago").value,
-    //fecha:
+    fecha: $.formNuevoIngreso.querySelector("#fechaIngreso").value,
   };
 }
 
 function registrarIngreso(ingreso) {
+  console.log("a ver su hay apikey" + token);
   const headers = {
     "Content-Type": "application/json",
-    apikeyl: token,
+    "apikey": token,
   };
 
   const data = {
@@ -516,6 +562,7 @@ function registrarIngreso(ingreso) {
     categoria: ingreso.categoria,
     total: ingreso.total,
     medio: ingreso.medio,
+    fecha: ingreso.fecha,
   };
 
   fetch(`${baseUrl}/movimientos.php`, {
@@ -530,7 +577,6 @@ function registrarIngreso(ingreso) {
 
 function ingresos(ingreso) {
   console.log("ingreso", ingreso);
-  token = ingreso.apikey;
   if (ingreso.codigo === 200) {
     navegar("/menu");
   } else {
@@ -561,7 +607,7 @@ function obtenerDatosGasto() {
 function registrarGasto(gasto) {
   const headers = {
     "Content-Type": "application/json",
-    apikey: token,
+    "apikey": token,
   };
 
   const data = {
@@ -583,7 +629,6 @@ function registrarGasto(gasto) {
 
 function gastos(gasto) {
   console.log("gasto", gasto);
-  token = gasto.apikey;
   if (gasto.codigo === 200) {
     navegar("/menu");
   } else {
@@ -619,7 +664,6 @@ function obtenerMovimientos() {
 
 // then movimientos
 function escribirMovimiento(movimientos) {
-  token = movimientos.apikey;
   let movimientosHtml = "";
 
   for (let movimiento of movimientos) {
@@ -666,15 +710,12 @@ function generarMovimientoHtml(movimiento) {
   }
 
   return /*html*/ `
-  <ion-card color="${colorRubro}" href="/movimientos-detalle">
-  <ion-card-header>
-    <ion-card-title>${movimiento.concepto}</ion-card-title>
-  </ion-card-header>
-
-  <ion-card-content>
-  ${textoRubro}
-  </ion-card-content>
-</ion-card>
+  <ion-list>
+  <ion-item>
+    <ion-label>${movimiento.concepto}</ion-label>
+    <ion-badge color="${colorRubro}">${textoRubro}</ion-badge>
+  </ion-item>
+</ion-list>
 `;
 }
 
@@ -683,16 +724,36 @@ function iniciarPageListadoMovimientos() {
 }
 
 // --------------------------------------------
-// ---------- Detalle movimientos -------------
-// --------------------------------------------
-function iniciarPageListadoMovimientosDetalle() {}
-
-// --------------------------------------------
 // -------------- Log out ---------------------
 // --------------------------------------------
 function manejarLogOut() {
-  token = undefined;
-  guardarSesionUsuario(token);
-  guardarIdUsuario(undefined);
+  localStorage.clear();
   navegar("/");
+}
+
+
+
+
+// --------------------------------------------
+// --------------- Utils ----------------------
+// --------------------------------------------
+
+ function crearUrl(baseUrl, params) {
+  const urlObj = new URL(baseUrl);
+  urlObj.search = new URLSearchParams(params).toString();
+  return urlObj.href;
+}
+
+ function guardarLocalStorage(clave, valor) {
+  localStorage.setItem(clave, JSON.stringify(valor));
+}
+
+ function leerLocalStorage(clave, valorPorDefecto) {
+  const valorStorage = JSON.parse(localStorage.getItem(clave));
+
+  if (valorStorage === null) {
+    return valorPorDefecto;
+  } else {
+    return valorStorage;
+  }
 }
