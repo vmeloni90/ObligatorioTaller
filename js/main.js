@@ -620,13 +620,46 @@ function escribirMovimiento(movimientos) {
 }
 
 function generarMovimientoHtml(movimiento) {
-  //let colorRubro;
+  let colorRubro;
+  let textoRubro;
+
+  switch (movimiento.categoria) {
+    case 1:
+      colorRubro = "danger";
+      textoRubro = "Gasto";
+      break;
+    case 2:
+      colorRubro = "danger";
+      textoRubro = "Gasto";
+      break;
+    case 3:
+      colorRubro = "danger";
+      textoRubro = "Gasto";
+      break;
+    case 4:
+      colorRubro = "danger";
+      textoRubro = "Gasto";
+      break;
+    case 5:
+      colorRubro = "danger";
+      textoRubro = "Gasto";
+      break;
+    case 6:
+      colorRubro = "danger";
+      textoRubro = "Gasto";
+      break;
+
+    default:
+      colorRubro = "success";
+      textoRubro = "Ingreso";
+      break;
+  }
 
   return /*html*/ `
   <ion-list>
   <ion-item>
     <ion-label>${movimiento.concepto}</ion-label>
-    <ion-badge color="primary">${movimiento.categoria}</ion-badge>
+    <ion-badge color="${colorRubro}">${textoRubro}</ion-badge>
   </ion-item>
 </ion-list>
 `;
