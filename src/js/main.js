@@ -190,8 +190,7 @@ function guardarElemento() {
   $.formNuevoGasto = document.querySelector("#formNuevoGasto");
   $.rubros = document.querySelectorAll("#cargaRubros");
   $.logOut = document.querySelectorAll("#btnLogOut");
-
-
+  $.modalMovimiento = document.querySelector("#modalMovimiento");
 }
 
 // AGREGAR EVENTOS
@@ -204,14 +203,16 @@ function agregarEventos() {
   $.formLogin.addEventListener("submit", manejarLoginUsuario);
   $.formNuevoIngreso.addEventListener("submit", manejarIngreso);
   $.formNuevoGasto.addEventListener("submit", manejarGasto);
-  $.rubros.forEach((rubro) =>{
-    rubro.addEventListener("click", precargaSelectRubros)
+  $.rubros.forEach((rubro) => {
+    rubro.addEventListener("click", precargaSelectRubros);
   });
-  $.logOut.forEach((btn) =>{
-    btn.addEventListener("click", manejarLogOut)
+  $.logOut.forEach((btn) => {
+    btn.addEventListener("click", manejarLogOut);
   });
 
-
+  $.modalMovimiento
+    .querySelector("#btnCerrarModal")
+    .addEventListener("click", cerrarModal);
 }
 
 // CERRAR MENU PRINCIPAL AL SELECCIONAR UN ITEM
@@ -331,7 +332,7 @@ function registrarUsuario(usuario) {
     idCiudad: usuario.idCiudad,
   };
 
- /* fetch(`${baseUrl}/usuarios.php`, {
+  /* fetch(`${baseUrl}/usuarios.php`, {
     method: "POST",
     headers: headers,
     body: JSON.stringify(data),
@@ -340,7 +341,7 @@ function registrarUsuario(usuario) {
     .then(registro)
     .catch(mostrarError);
 }*/
-fetchUsuarios(data)
+  fetchUsuarios(data)
     .then(function (jsonReposponse) {
       console.log("then registro", jsonReposponse);
       if (jsonReposponse.codigo === 200) {
@@ -414,6 +415,7 @@ function loginUsuario(usuario) {
       console.log(jsonReposponse.apiKey);
       if (jsonReposponse.codigo === 200) {
         guardarSesionUsuario(jsonReposponse.apiKey);
+        guardarIdUsuario(jsonReposponse.id);
         navegar("/menu");
       } else {
         throw jsonReposponse.mensaje;
@@ -554,7 +556,7 @@ function registrarIngreso(ingreso) {
   console.log("a ver su hay apikey" + token);
   const headers = {
     "Content-Type": "application/json",
-    "apikey": token,
+    apikey: token,
   };
 
   const data = {
@@ -607,7 +609,7 @@ function obtenerDatosGasto() {
 function registrarGasto(gasto) {
   const headers = {
     "Content-Type": "application/json",
-    "apikey": token,
+    apikey: token,
   };
 
   const data = {
@@ -710,13 +712,47 @@ function generarMovimientoHtml(movimiento) {
   }
 
   return /*html*/ `
-  <ion-list>
-  <ion-item>
-    <ion-label>${movimiento.concepto}</ion-label>
-    <ion-badge color="${colorRubro}">${textoRubro}</ion-badge>
-  </ion-item>
-</ion-list>
+  <ion-modal trigger="open-modal" id="modalMovimiento">
+  <ion-header>
+    <ion-toolbar>
+      <ion-buttons slot="end">
+        <ion-button id="btnCerrarModal">Cancel</ion-button>
+      </ion-buttons>
+      <ion-title>Eliminar movimiento</ion-title>
+    </ion-toolbar>
+  </ion-header>
+  <ion-content class="ion-padding">
+    <ion-item>
+    <ion-button id="">Eliminar movimiento</ion-button>
+    </ion-item>
+  </ion-content>
+</ion-modal>
+</ion-content>
+
+  <ion-card color="${colorRubro}">
+  <ion-card-header>
+    <ion-card-title>${movimiento.concepto}</ion-card-title>
+    <ion-card-subtitle><strong>Fecha: </strong>${movimiento.fecha}</ion-card-subtitle>
+    <ion-card-subtitle><strong>Total: $ </strong>${movimiento.total}</ion-card-subtitle>
+  </ion-card-header>
+  <ion-card-content>
+  <ion-grid>
+  <ion-row>
+    <ion-col>${textoRubro}</ion-col>
+    <ion-col size="3">
+      <ion-button size="small" color="warning" id="open-modal">
+      <ion-icon name="skull-outline"></ion-icon>
+      </ion-button>
+    </ion-col>
+  </ion-row>
+</ion-grid>
+  </ion-card-content>
+</ion-card>
 `;
+}
+
+function cerrarModal() {
+  $.modalMovimiento.dismiss();
 }
 
 function iniciarPageListadoMovimientos() {
@@ -731,24 +767,21 @@ function manejarLogOut() {
   navegar("/");
 }
 
-
-
-
 // --------------------------------------------
 // --------------- Utils ----------------------
 // --------------------------------------------
 
- function crearUrl(baseUrl, params) {
+function crearUrl(baseUrl, params) {
   const urlObj = new URL(baseUrl);
   urlObj.search = new URLSearchParams(params).toString();
   return urlObj.href;
 }
 
- function guardarLocalStorage(clave, valor) {
+function guardarLocalStorage(clave, valor) {
   localStorage.setItem(clave, JSON.stringify(valor));
 }
 
- function leerLocalStorage(clave, valorPorDefecto) {
+function leerLocalStorage(clave, valorPorDefecto) {
   const valorStorage = JSON.parse(localStorage.getItem(clave));
 
   if (valorStorage === null) {
