@@ -65,7 +65,7 @@ function escribirSelectRubros(jsonResponse) {
   const rubrosOrdenados = ordenarRubros(rub);
 
   for (let rubro of rubrosOrdenados) {
-    if (rubro.tipo == "gasto"){
+    if (rubro.tipo == "gasto") {
       rubrosGastos += `<ion-select-option value=${rubro.id}>${rubro.nombre}</ion-select-option>`;
     } else if (rubro.tipo == "ingreso") {
       rubrosIngresos += `<ion-select-option value=${rubro.id}>${rubro.nombre}</ion-select-option>`;
@@ -287,6 +287,7 @@ function manejarRuta(event) {
         mostrarPaginas("#page-gastos");
         break;
       case "/movimientos":
+        iniciarPageListadoMovimientos();
         mostrarPaginas("#page-movimientos");
         break;
     }
@@ -610,17 +611,44 @@ function obtenerMovimientos() {
     params: params,
   })
     .then(getJsonBody)
-    .then(movimiento)
+    .then((jsonResponse) => {
+      escribirMovimiento(jsonResponse.movimientos);
+    })
     .catch(mostrarError);
 }
 
-// then cajeros
-function movimiento(movimientos) {
+// then movimientos
+function escribirMovimiento(movimientos) {
   token = movimientos.apikey;
+  let movimientosHtml = "";
+
+  for (let movimiento of movimientos) {
+    movimientosHtml += generarMovimientoHtml(movimiento);
+  }
+  document.querySelector("#listadoMovimientos").innerHTML = movimientosHtml;
   console.log("movimientos", movimientos);
 }
 
-//Log out 
+function generarMovimientoHtml(movimiento) {
+  //let colorRubro;
+
+  return /*html*/ `
+  <ion-list>
+  <ion-item>
+    <ion-label>${movimiento.concepto}</ion-label>
+    <ion-badge color="primary">${movimiento.categoria}</ion-badge>
+  </ion-item>
+</ion-list>
+`;
+}
+
+function iniciarPageListadoMovimientos() {
+  obtenerMovimientos();
+}
+
+// --------------------------------------------
+// -------------- Log out ---------------------
+// --------------------------------------------
 function manejarLogOut() {
   token = null;
   guardarSesionUsuario(token);
