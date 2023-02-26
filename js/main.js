@@ -190,7 +190,11 @@ function guardarElemento() {
   $.formLogin = document.querySelector("#formLoginUsuario");
   $.formNuevoIngreso = document.querySelector("#formNuevoIngreso");
   $.formNuevoGasto = document.querySelector("#formNuevoGasto");
-  $.logOut = document.querySelector("#btnLogOut");
+  $.seccionIngresos = document.querySelector("#ingresos");
+  $.seccionGastos = document.querySelector("#gastos");
+  $.logOut = document.querySelectorAll("#btnLogOut");
+
+
 }
 
 // AGREGAR EVENTOS
@@ -203,7 +207,13 @@ function agregarEventos() {
   $.formLogin.addEventListener("submit", manejarLoginUsuario);
   $.formNuevoIngreso.addEventListener("submit", manejarIngreso);
   $.formNuevoGasto.addEventListener("submit", manejarGasto);
-  $.logOut.addEventListener("click", manejarLogOut);
+  $.seccionIngresos.addEventListener("click", precargaSelectRubros);
+  $.seccionGastos.addEventListener("click", precargaSelectRubros);
+  $.logOut.forEach((btn) =>{
+    btn.addEventListener("click", manejarLogOut)
+  });
+
+
 }
 
 // CERRAR MENU PRINCIPAL AL SELECCIONAR UN ITEM
