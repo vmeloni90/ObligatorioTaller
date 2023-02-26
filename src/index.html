@@ -53,10 +53,10 @@
             <ion-item href="/menu">
               <ion-label>Menu</ion-label>
             </ion-item>
-            <ion-item href="/ingresos" id="ingresos">
+            <ion-item href="/ingresos" id="cargaRubros">
               <ion-label>Ingresos</ion-label>
             </ion-item>
-            <ion-item href="/gastos" id="gastos">
+            <ion-item href="/gastos" id="cargaRubros">
               <ion-label>Gastos</ion-label>
             </ion-item>
             <ion-item href="/movimientos">
@@ -94,7 +94,7 @@
                     expand="block"
                     shape="round"
                     href="/ingresos"
-                    id="ingresos"
+                    id="cargaRubros"
                     >Ingresos
                     <ion-icon name="trending-up-outline" slot="end"></ion-icon>
                   </ion-button>
@@ -107,7 +107,7 @@
                     expand="block"
                     shape="round"
                     href="/gastos"
-                    id="gastos"
+                    id="cargaRubros"
                     >Gastos
                     <ion-icon
                       name="trending-down-outline"
@@ -331,6 +331,7 @@
               </ion-item>
               <ion-item>
                 <ion-label>Seleccionar Fecha:</ion-label>
+                <ion-datetime id="fechaIngreso" displayFormat="MM DD YY" placeholder="Select Date"></ion-datetime>
               </ion-item>
               <ion-button
                 type="submit"
@@ -409,7 +410,7 @@
               </ion-item>
               <ion-item>
                 <ion-label>Seleccionar Fecha:</ion-label>
-                <ion-datetime></ion-datetime>
+                <ion-datetime displayFormat="MM DD YY" placeholder="Select Date"></ion-datetime>
               </ion-item>
               <ion-button
                 type="submit"
@@ -465,7 +466,7 @@
         </ion-page>
       </ion-content>
     </ion-app>
-    <script src="./js/utils.js"></script>
+    <!--<script src="./js/utils.js"></script>-->
     <script src="./js/main.js"></script>
   </body>
 </html>
