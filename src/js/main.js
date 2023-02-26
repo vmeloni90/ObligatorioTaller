@@ -187,7 +187,6 @@ function guardarElemento() {
   $.formNuevoGasto = document.querySelector("#formNuevoGasto");
   $.rubros = document.querySelectorAll("#cargaRubros");
   $.logOut = document.querySelectorAll("#btnLogOut");
-  $.modalMovimiento = document.querySelector("#modalMovimiento");
 }
 
 // AGREGAR EVENTOS
@@ -206,10 +205,6 @@ function agregarEventos() {
   $.logOut.forEach((btn) => {
     btn.addEventListener("click", manejarLogOut);
   });
-
-  $.modalMovimiento
-    .querySelector("#btnCerrarModal")
-    .addEventListener("click", cerrarModal);
 }
 
 // MANEJAR REGISTRO USUARIO
@@ -258,20 +253,36 @@ function manejarRuta(event) {
         mostrarPaginas("#page-login");
         break;
       case "/registro":
-        mostrarPaginas("#page-registro");
+        navegar("/");
         break;
       case "/menu":
-        mostrarPaginas("#page-menu");
+        if(token != "" && idUser!="") {
+          mostrarPaginas("#page-menu");
+        }else{
+          navegar("/");
+        }
         break;
       case "/ingresos":
-        mostrarPaginas("#page-ingresos");
+        if(token != "" && idUser!="") {
+          mostrarPaginas("#page-ingresos");
+        }else{
+          navegar("/");
+        }
         break;
       case "/gastos":
-        mostrarPaginas("#page-gastos");
+        if(token != "" && idUser!="") {
+          mostrarPaginas("#page-gastos");
+        }else{
+          navegar("/");
+        }
         break;
       case "/movimientos":
-        iniciarPageListadoMovimientos();
-        mostrarPaginas("#page-movimientos");
+        if(token != "" && idUser!="") {
+          iniciarPageListadoMovimientos();
+          mostrarPaginas("#page-movimientos");
+        }else{
+          navegar("/");
+        }
         break;
     }
   }
@@ -337,9 +348,6 @@ function loginUsuario(usuario) {
       return rawResponse.json();
     })
     .then(function (jsonReposponse) {
-      console.log("login usuaio " + jsonReposponse);
-      console.log("login usuaio " + jsonReposponse.id);
-
       if (jsonReposponse.codigo === 200) {
         guardarSesionUsuario(jsonReposponse.apiKey);
         guardarIdUsuario(jsonReposponse.id);
@@ -564,47 +572,71 @@ function obtenerMovimientos() {
 }
 
 // then movimientos
-function escribirMovimiento(jsonResponse) {
-  console.log(jsonResponse);
+function escribirMovimiento(jsonResponse, tipo) {
   let movimientos = jsonResponse.movimientos;
   let movimientosHtml = "";
-
-  for (let movimiento of movimientos) {
-    movimientosHtml += generarMovimientoHtml(movimiento);
-  }
-  document.querySelector("#listadoMovimientos").innerHTML = movimientosHtml;
-}
-
-function generarMovimientoHtml(movimiento) {
+  let totalIngresos =0;
+  let totalGastos = 0;
   let categoriaIngreso = [7, 8, 9, 10, 11, 12];
   let categoriaGasto = [1, 2, 3, 4, 5,6]; 
   let colorRubro;
   let textoRubro;
-  if(categoriaIngreso.indexOf(movimiento.categoria) != -1){
-    colorRubro = "success";
-    textoRubro = "Ingreso";
-  }else if(categoriaGasto.indexOf(movimiento.categoria) != -1) {
-    colorRubro = "danger";
-    textoRubro = "Gasto";
-  }
-  return /*html*/ `
-  <ion-modal trigger="open-modal" id="modalMovimiento">
-  <ion-header>
-    <ion-toolbar>
-      <ion-buttons slot="end">
-        <ion-button id="btnCerrarModal">Cancel</ion-button>
-      </ion-buttons>
-      <ion-title>Eliminar movimiento</ion-title>
-    </ion-toolbar>
-  </ion-header>
-  <ion-content class="ion-padding">
-    <ion-item>
-    <ion-button id="">Eliminar movimiento</ion-button>
-    </ion-item>
-  </ion-content>
-</ion-modal>
-</ion-content>
 
+  for (let movimiento of movimientos) {
+    if(categoriaIngreso.indexOf(movimiento.categoria) != -1 && (typeof tipo === 'undefined' || tipo.toLowerCase() == "ingreso")){
+      totalIngresos += movimiento.total;
+      colorRubro = "success";
+      textoRubro = "Ingreso";
+      movimientosHtml += generarMovimientoHtml(movimiento, colorRubro, textoRubro);
+
+    }else if(categoriaGasto.indexOf(movimiento.categoria) != -1 && (typeof tipo === 'undefined' || tipo.toLowerCase() == "gasto")) {
+      totalGastos += movimiento.total;
+      colorRubro = "danger";
+      textoRubro = "Gasto";
+      movimientosHtml += generarMovimientoHtml(movimiento, colorRubro, textoRubro);
+
+    }
+
+  }
+  let subTotal = totalIngresos -totalGastos;
+  document.querySelector("#listadoMovimientos").innerHTML =  
+  /*html*/ `  
+  <ion-row size="3">
+    <ion-button onClick="filtrarIngresos()"
+    size="medium"
+    expand="block"
+    shape="round" color = "success">Ingresos
+    <ion-icon name="trending-up-outline" slot="end"></ion-icon>
+    </ion-button> 
+    <ion-button onClick="filtrarGastos()"
+    size="medium" 
+    expand="block"
+    shape="round" color ="danger">Gastos
+    <ion-icon
+      name="trending-down-outline"
+      slot="end"></ion-icon>
+    </ion-button>
+    <ion-button onClick="obtenerMovimientos()"
+    size="medium" 
+    expand="block"
+    shape="round">Todos los Movimientos
+    <ion-icon
+      name="swap-horizontal-outline"
+      slot="end"></ion-icon>
+    </ion-button>
+  </ion-row>`+ movimientosHtml + 
+  /*html*/ ` 
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title color="success">Total Ingresos: ${totalIngresos}</ion-card-title>
+      <ion-card-title color="danger">Total Gastos: ${totalGastos}</ion-card-title>
+      <ion-card-title color="dark">Saldo Restante: ${subTotal}</ion-card-title>
+    </ion-card-header>
+  </ion-card> `;
+}
+
+function generarMovimientoHtml(movimiento, colorRubro, textoRubro) {
+  return /*html*/ `
   <ion-card>
   <ion-card-header>
   <ion-card-title color="${colorRubro}">${textoRubro}</ion-card-title>
@@ -617,7 +649,7 @@ function generarMovimientoHtml(movimiento) {
   <ion-row>
     <ion-col></ion-col>
     <ion-col size="1">
-      <ion-button size="medium" color="danger" id="open-modal">
+      <ion-button size="medium" color="danger" onClick="deleteMovimiento(${movimiento.id})">
       <ion-icon name="trash"></ion-icon>
       </ion-button>
     </ion-col>
@@ -628,19 +660,109 @@ function generarMovimientoHtml(movimiento) {
 `;
 }
 
-function cerrarModal() {
-  $.modalMovimiento.dismiss();
-}
-
 function iniciarPageListadoMovimientos() {
   obtenerMovimientos();
 }
+
+// Funcion que elimina movimiento a partir del botón de eliminar del html, donde se pasa por parámetro
+// el id del movimiento en cuestión.
+function deleteMovimiento(id) {
+  const headers = {
+    "Content-Type": "application/json",
+    "apikey": token,
+  };
+
+  const data = {
+    idMovimiento: id,
+  };
+
+  fetch(`${baseUrl}/movimientos.php`, {
+    method: "DELETE",
+    headers: headers,
+    body: JSON.stringify(data),
+  })
+  .then(getJsonBody)
+  .then(verificarEliminacion)
+  .catch(mostrarError);
+}
+
+// Verificamos el codigo de respuesta de la api, si es un 200 (qes decir que elimino el movimiento)
+// recargo la pagina de movimientos y muestro mensaje de exito.
+function verificarEliminacion(movimientoEliminado) {
+  if (movimientoEliminado.codigo === 200) {
+    //vuelvo a cosultar los movimientos, verificando asi que se haya eliminado de la lista
+    obtenerMovimientos();
+    mostrarToastSuccess("Movimiento Eliminado Correctamente");
+  } else {
+    throw movimientoEliminado.error;
+  }
+
+}
+
+function filtrarIngresos() {
+ const headers = {
+  "Content-Type": "application/json",
+  "apikey": token,
+};
+
+const params = {
+  idUsuario: idUser,
+};
+
+fetch(crearUrl(`${baseUrl}/movimientos.php`, params), {
+  method: "GET",
+  headers: headers,
+  params: params,
+})
+ .then(function (rawResponse) {
+  return rawResponse.json();
+})
+.then(function (jsonResponse) {
+  if (jsonResponse.codigo === 200) {
+    escribirMovimiento(jsonResponse, "ingreso");
+  } else {
+    throw jsonResponse.mensaje;
+  }
+})
+.catch(mostrarError);
+}
+
+function filtrarGastos() {
+  const headers = {
+   "Content-Type": "application/json",
+   "apikey": token,
+ };
+ 
+ const params = {
+   idUsuario: idUser,
+ };
+ 
+ fetch(crearUrl(`${baseUrl}/movimientos.php`, params), {
+   method: "GET",
+   headers: headers,
+   params: params,
+ })
+  .then(function (rawResponse) {
+   return rawResponse.json();
+ })
+ .then(function (jsonResponse) {
+   if (jsonResponse.codigo === 200) {
+     escribirMovimiento(jsonResponse, "gasto");
+   } else {
+     throw jsonResponse.mensaje;
+   }
+ })
+ .catch(mostrarError);
+ }
+
 
 // --------------------------------------------
 // -------------- Log out ---------------------
 // --------------------------------------------
 function manejarLogOut() {
   localStorage.clear();
+  token = obtenerSesionUsuario();
+  idUser = obteneridUsuario();
   navegar("/");
 }
 
@@ -685,6 +807,10 @@ function fetchPost(url, data) {
 function mostrarToastSuccess(mensaje) {
   mostrarToast(mensaje, "success");
 }
+function mostrarToastError(mensaje) {
+  mostrarToast(mensaje, "danger");
+}
+
 function mostrarToast(mensaje, color) {
   const $toast = document.createElement("ion-toast");
   $toast.message = mensaje;
@@ -707,7 +833,7 @@ function navegar(path) {
 
 // MOSTRAR ERRORES
 function mostrarError(error) {
-  console.warn(error);
+  mostrarToastError(error)
 }
 
 // GET JSON
