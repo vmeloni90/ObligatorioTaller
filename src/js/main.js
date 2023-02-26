@@ -576,41 +576,17 @@ function escribirMovimiento(jsonResponse) {
 }
 
 function generarMovimientoHtml(movimiento) {
+  let categoriaIngreso = [7, 8, 9, 10, 11, 12];
+  let categoriaGasto = [1, 2, 3, 4, 5,6]; 
   let colorRubro;
   let textoRubro;
-
-  switch (movimiento.categoria) {
-    case 1:
-      colorRubro = "danger";
-      textoRubro = "Gasto";
-      break;
-    case 2:
-      colorRubro = "danger";
-      textoRubro = "Gasto";
-      break;
-    case 3:
-      colorRubro = "danger";
-      textoRubro = "Gasto";
-      break;
-    case 4:
-      colorRubro = "danger";
-      textoRubro = "Gasto";
-      break;
-    case 5:
-      colorRubro = "danger";
-      textoRubro = "Gasto";
-      break;
-    case 6:
-      colorRubro = "danger";
-      textoRubro = "Gasto";
-      break;
-
-    default:
-      colorRubro = "success";
-      textoRubro = "Ingreso";
-      break;
+  if(categoriaIngreso.indexOf(movimiento.categoria) != -1){
+    colorRubro = "success";
+    textoRubro = "Ingreso";
+  }else if(categoriaGasto.indexOf(movimiento.categoria) != -1) {
+    colorRubro = "danger";
+    textoRubro = "Gasto";
   }
-
   return /*html*/ `
   <ion-modal trigger="open-modal" id="modalMovimiento">
   <ion-header>
@@ -629,8 +605,9 @@ function generarMovimientoHtml(movimiento) {
 </ion-modal>
 </ion-content>
 
-  <ion-card color="${colorRubro}">
+  <ion-card>
   <ion-card-header>
+  <ion-card-title color="${colorRubro}">${textoRubro}</ion-card-title>
     <ion-card-title>${movimiento.concepto}</ion-card-title>
     <ion-card-subtitle><strong>Fecha: </strong>${movimiento.fecha}</ion-card-subtitle>
     <ion-card-subtitle><strong>Total: $ </strong>${movimiento.total}</ion-card-subtitle>
@@ -638,10 +615,10 @@ function generarMovimientoHtml(movimiento) {
   <ion-card-content>
   <ion-grid>
   <ion-row>
-    <ion-col>${textoRubro}</ion-col>
-    <ion-col size="3">
-      <ion-button size="small" color="warning" id="open-modal">
-      <ion-icon name="skull-outline"></ion-icon>
+    <ion-col></ion-col>
+    <ion-col size="1">
+      <ion-button size="medium" color="danger" id="open-modal">
+      <ion-icon name="trash"></ion-icon>
       </ion-button>
     </ion-col>
   </ion-row>
