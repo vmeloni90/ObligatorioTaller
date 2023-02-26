@@ -1,4 +1,4 @@
-export function crearUrl(baseUrl, params) {
+/*export function crearUrl(baseUrl, params) {
   const urlObj = new URL(baseUrl);
   urlObj.search = new URLSearchParams(params).toString();
   return urlObj.href;
@@ -16,4 +16,4 @@ export function leerLocalStorage(clave, valorPorDefecto) {
   } else {
     return valorStorage;
   }
-}
+}*/

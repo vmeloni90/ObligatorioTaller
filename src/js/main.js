@@ -38,7 +38,6 @@ function precargaSelectRubros() {
 // then rubros
 function listaRubros(rubro) {
   escribirSelectRubros(rubro);
-  console.log(rubro);
 }
 
 function ordenarRubros(jsonResponse) {
@@ -97,7 +96,6 @@ function departamento(departamento) {
 // ordener departamentos a-z
 function ordenarDepartamentos(jsonResponse) {
   const deptos = jsonResponse;
-  console.log("ordenados", jsonResponse);
   return deptos.sort(function (deptos1, deptos2) {
     if (deptos1.nombre > deptos2.nombre) {
       return 1;
@@ -153,7 +151,6 @@ function ciudad(ciudad) {
 // ordener ciudades a-z
 function ordenarCidades(jsonResponse) {
   const ciuda = jsonResponse;
-  console.log("ordenadosCiudades", jsonResponse);
   return ciuda.sort(function (ciuda1, ciuda2) {
     if (ciuda1.nombre > ciuda2.nombre) {
       return 1;
@@ -215,18 +212,10 @@ function agregarEventos() {
     .addEventListener("click", cerrarModal);
 }
 
-// CERRAR MENU PRINCIPAL AL SELECCIONAR UN ITEM
-function cerrarMenuPrincipal() {
-  $.menuPrincipal.close();
-}
-
 // MANEJAR REGISTRO USUARIO
 function manejarRegistroUsuario(e) {
   e.preventDefault();
-
   const datos = obtenerDatosRegistro();
-  console.log("registro", datos);
-
   registrarUsuario(datos);
 }
 
@@ -243,10 +232,7 @@ function obtenerDatosRegistro() {
 // MANEJAR LOGIN USUARIO
 function manejarLoginUsuario(e) {
   e.preventDefault();
-
   const datos = obtenerDatosLogin();
-  console.log("login", datos);
-
   // validamos
   loginUsuario(datos);
 }
@@ -262,8 +248,6 @@ function obtenerDatosLogin() {
 // MANEJO RUTAS
 function manejarRuta(event) {
   const path = event.detail.to;
-  console.log("ruta", path);
-
   const sesionValida = validarSesion(path);
 
   if (sesionValida) {
@@ -309,16 +293,6 @@ function validarSesion(path) {
   }
 }
 
-// MOSTRAR PAGINAS
-function mostrarPaginas(id) {
-  document.querySelector(id).classList.add("page-activa");
-}
-
-// NAVEGAR ENTRE LAS PAGINAS
-function navegar(path) {
-  $.ionRouter.push(path);
-}
-
 // REGISTRAR USUARIO
 function registrarUsuario(usuario) {
   const headers = {
@@ -331,19 +305,8 @@ function registrarUsuario(usuario) {
     idDepartamento: usuario.idDepartamento,
     idCiudad: usuario.idCiudad,
   };
-
-  /* fetch(`${baseUrl}/usuarios.php`, {
-    method: "POST",
-    headers: headers,
-    body: JSON.stringify(data),
-  })
-    .then(getJsonBody)
-    .then(registro)
-    .catch(mostrarError);
-}*/
   fetchUsuarios(data)
     .then(function (jsonReposponse) {
-      console.log("then registro", jsonReposponse);
       if (jsonReposponse.codigo === 200) {
         navegar("/");
         mostrarToastSuccess("Usuario registrado con éxito");
@@ -353,42 +316,6 @@ function registrarUsuario(usuario) {
     })
     .catch(mostrarError);
 }
-function fetchUsuarios(data) {
-  return fetchPost(`${baseUrl}/usuarios.php`, data);
-}
-function fetchPost(url, data) {
-  const headers = {
-    "Content-Type": "application/json",
-  };
-
-  return fetch(url, {
-    method: "POST",
-    headers: headers,
-    body: JSON.stringify(data),
-  }).then(getJsonBody);
-}
-function mostrarToastSuccess(mensaje) {
-  mostrarToast(mensaje, "success");
-}
-function mostrarToast(mensaje, color) {
-  const $toast = document.createElement("ion-toast");
-  $toast.message = mensaje;
-  $toast.duration = 3000;
-  $toast.color = color;
-
-  document.body.appendChild($toast);
-  $toast.present();
-}
-
-// then Registro
-/*function registro(registro) {
-  console.log("registro", registro);
-  if (registro.codigo === 200) {
-    navegar("/");
-  } else {
-    throw registro.error;
-  }
-}*/
 
 // LOGIN USUARIO
 function loginUsuario(usuario) {
@@ -410,9 +337,9 @@ function loginUsuario(usuario) {
       return rawResponse.json();
     })
     .then(function (jsonReposponse) {
-      console.log("then login", jsonReposponse);
-      console.log(jsonReposponse.codigo);
-      console.log(jsonReposponse.apiKey);
+      console.log("login usuaio " + jsonReposponse);
+      console.log("login usuaio " + jsonReposponse.id);
+
       if (jsonReposponse.codigo === 200) {
         guardarSesionUsuario(jsonReposponse.apiKey);
         guardarIdUsuario(jsonReposponse.id);
@@ -424,21 +351,10 @@ function loginUsuario(usuario) {
     .catch(mostrarError);
 }
 
-// then Login  -
-/*function login(responseJson) {
-  if (responseJson.codigo === 200) {
-    guardarSesionUsuario(responseJson.apiKey);
-    guardarIdUsuario(responseJson.id);
-    navegar("/menu");
-  } else {
-    throw login.error;
-  }
-}*/
-
 // OBTENER USUARIOS POR DEPARTAMENTOS
 function obtenerUsuariosPorDepartamentos() {
   const headers = {
-    apikey: token,
+    "apikey": token,
     "Content-Type": "application/json",
   };
 
@@ -474,25 +390,6 @@ function obtenerCajeros() {
 // then cajeros
 function listaCajeros(cajeros) {
   console.log("cajeros", cajeros);
-}
-
-// MOSTRAR ERRORES
-function mostrarError(error) {
-  console.warn(error);
-}
-
-// GET JSON
-function getJsonBody(response) {
-  // podemos validar el status
-  return response.json();
-}
-
-// Ocultar paginas
-function ocultarPageActiva() {
-  const $pageActive = document.querySelector(".page-activa");
-  if ($pageActive) {
-    $pageActive.classList.remove("page-activa");
-  }
 }
 
 // Ocultar y mostrar el password
@@ -553,13 +450,13 @@ function obtenerDatosIngreso() {
 }
 
 function registrarIngreso(ingreso) {
-  console.log("a ver su hay apikey" + token);
   const headers = {
     "Content-Type": "application/json",
-    apikey: token,
+    "apikey": token,
   };
 
   const data = {
+    idUsuario: ingreso.idUsuario,
     concepto: ingreso.concepto,
     categoria: ingreso.categoria,
     total: ingreso.total,
@@ -581,6 +478,7 @@ function ingresos(ingreso) {
   console.log("ingreso", ingreso);
   if (ingreso.codigo === 200) {
     navegar("/menu");
+    mostrarToastSuccess("Ingreso agregado con éxito");
   } else {
     throw ingreso.error;
   }
@@ -602,21 +500,23 @@ function obtenerDatosGasto() {
     rubro: $.formNuevoGasto.querySelector("#selRubros").value,
     total: $.formNuevoGasto.querySelector("#inpTotal").value,
     medio: $.formNuevoGasto.querySelector("#selMedioPago").value,
-    //fecha:
+    fecha: $.formNuevoGasto.querySelector("#fechaGasto").value,
   };
 }
 
 function registrarGasto(gasto) {
   const headers = {
     "Content-Type": "application/json",
-    apikey: token,
+    "apikey": token,
   };
 
   const data = {
+    idUsuario: gasto.idUsuario,
     concepto: gasto.concepto,
-    rubro: gasto.rubro,
+    categoria: gasto.rubro,
     total: gasto.total,
     medio: gasto.medio,
+    fecha: gasto.fecha,
   };
 
   fetch(`${baseUrl}/movimientos.php`, {
@@ -633,6 +533,7 @@ function gastos(gasto) {
   console.log("gasto", gasto);
   if (gasto.codigo === 200) {
     navegar("/menu");
+    mostrarToastSuccess("Gasto agregado con éxito");
   } else {
     throw gasto.error;
   }
@@ -645,7 +546,7 @@ function gastos(gasto) {
 function obtenerMovimientos() {
   const headers = {
     "Content-Type": "application/json",
-    apikey: token,
+    "apikey": token,
   };
 
   const params = {
@@ -658,21 +559,20 @@ function obtenerMovimientos() {
     params: params,
   })
     .then(getJsonBody)
-    .then((jsonResponse) => {
-      escribirMovimiento(jsonResponse.movimientos);
-    })
+    .then(escribirMovimiento)
     .catch(mostrarError);
 }
 
 // then movimientos
-function escribirMovimiento(movimientos) {
+function escribirMovimiento(jsonResponse) {
+  console.log(jsonResponse);
+  let movimientos = jsonResponse.movimientos;
   let movimientosHtml = "";
 
   for (let movimiento of movimientos) {
     movimientosHtml += generarMovimientoHtml(movimiento);
   }
   document.querySelector("#listadoMovimientos").innerHTML = movimientosHtml;
-  console.log("movimientos", movimientos);
 }
 
 function generarMovimientoHtml(movimiento) {
@@ -789,4 +689,64 @@ function leerLocalStorage(clave, valorPorDefecto) {
   } else {
     return valorStorage;
   }
+}
+
+function fetchUsuarios(data) {
+  return fetchPost(`${baseUrl}/usuarios.php`, data);
+}
+function fetchPost(url, data) {
+  const headers = {
+    "Content-Type": "application/json",
+  };
+
+  return fetch(url, {
+    method: "POST",
+    headers: headers,
+    body: JSON.stringify(data),
+  }).then(getJsonBody);
+}
+function mostrarToastSuccess(mensaje) {
+  mostrarToast(mensaje, "success");
+}
+function mostrarToast(mensaje, color) {
+  const $toast = document.createElement("ion-toast");
+  $toast.message = mensaje;
+  $toast.duration = 3000;
+  $toast.color = color;
+
+  document.body.appendChild($toast);
+  $toast.present();
+}
+
+// MOSTRAR PAGINAS
+function mostrarPaginas(id) {
+  document.querySelector(id).classList.add("page-activa");
+}
+
+// NAVEGAR ENTRE LAS PAGINAS
+function navegar(path) {
+  $.ionRouter.push(path);
+}
+
+// MOSTRAR ERRORES
+function mostrarError(error) {
+  console.warn(error);
+}
+
+// GET JSON
+function getJsonBody(response) {
+  return response.json();
+}
+
+// Ocultar paginas
+function ocultarPageActiva() {
+  const $pageActive = document.querySelector(".page-activa");
+  if ($pageActive) {
+    $pageActive.classList.remove("page-activa");
+  }
+}
+
+// CERRAR MENU PRINCIPAL AL SELECCIONAR UN ITEM
+function cerrarMenuPrincipal() {
+  $.menuPrincipal.close();
 }
