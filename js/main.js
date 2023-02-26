@@ -271,14 +271,13 @@ function manejarRuta(event) {
         mostrarPaginas("#page-menu");
         break;
       case "/ingresos":
-        precargaSelectRubros();
         mostrarPaginas("#page-ingresos");
         break;
       case "/gastos":
-        precargaSelectRubros();
         mostrarPaginas("#page-gastos");
         break;
       case "/movimientos":
+        iniciarPageListadoMovimientos();
         mostrarPaginas("#page-movimientos");
         break;
     }
@@ -602,17 +601,44 @@ function obtenerMovimientos() {
     params: params,
   })
     .then(getJsonBody)
-    .then(movimiento)
+    .then((jsonResponse) => {
+      escribirMovimiento(jsonResponse.movimientos);
+    })
     .catch(mostrarError);
 }
 
-// then cajeros
-function movimiento(movimientos) {
+// then movimientos
+function escribirMovimiento(movimientos) {
   token = movimientos.apikey;
+  let movimientosHtml = "";
+
+  for (let movimiento of movimientos) {
+    movimientosHtml += generarMovimientoHtml(movimiento);
+  }
+  document.querySelector("#listadoMovimientos").innerHTML = movimientosHtml;
   console.log("movimientos", movimientos);
 }
 
-//Log out
+function generarMovimientoHtml(movimiento) {
+  //let colorRubro;
+
+  return /*html*/ `
+  <ion-list>
+  <ion-item>
+    <ion-label>${movimiento.concepto}</ion-label>
+    <ion-badge color="primary">${movimiento.categoria}</ion-badge>
+  </ion-item>
+</ion-list>
+`;
+}
+
+function iniciarPageListadoMovimientos() {
+  obtenerMovimientos();
+}
+
+// --------------------------------------------
+// -------------- Log out ---------------------
+// --------------------------------------------
 function manejarLogOut() {
   token = null;
   guardarSesionUsuario(token);
