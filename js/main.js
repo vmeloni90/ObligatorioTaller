@@ -193,8 +193,6 @@ function guardarElemento() {
   $.seccionIngresos = document.querySelector("#ingresos");
   $.seccionGastos = document.querySelector("#gastos");
   $.logOut = document.querySelectorAll("#btnLogOut");
-
-
 }
 
 // AGREGAR EVENTOS
@@ -209,11 +207,9 @@ function agregarEventos() {
   $.formNuevoGasto.addEventListener("submit", manejarGasto);
   $.seccionIngresos.addEventListener("click", precargaSelectRubros);
   $.seccionGastos.addEventListener("click", precargaSelectRubros);
-  $.logOut.forEach((btn) =>{
-    btn.addEventListener("click", manejarLogOut)
+  $.logOut.forEach((btn) => {
+    btn.addEventListener("click", manejarLogOut);
   });
-
-
 }
 
 // CERRAR MENU PRINCIPAL AL SELECCIONAR UN ITEM
@@ -289,6 +285,10 @@ function manejarRuta(event) {
       case "/movimientos":
         iniciarPageListadoMovimientos();
         mostrarPaginas("#page-movimientos");
+        break;
+      case "/movimientos-detalle":
+        iniciarPageListadoMovimientosDetalle();
+        mostrarPaginas("#page-movimientos-detalle");
         break;
     }
   }
@@ -508,7 +508,7 @@ function obtenerDatosIngreso() {
 function registrarIngreso(ingreso) {
   const headers = {
     "Content-Type": "application/json",
-    apikey: token,
+    apikeyl: token,
   };
 
   const data = {
@@ -666,12 +666,15 @@ function generarMovimientoHtml(movimiento) {
   }
 
   return /*html*/ `
-  <ion-list>
-  <ion-item>
-    <ion-label>${movimiento.concepto}</ion-label>
-    <ion-badge color="${colorRubro}">${textoRubro}</ion-badge>
-  </ion-item>
-</ion-list>
+  <ion-card color="${colorRubro}" href="/movimientos-detalle">
+  <ion-card-header>
+    <ion-card-title>${movimiento.concepto}</ion-card-title>
+  </ion-card-header>
+
+  <ion-card-content>
+  ${textoRubro}
+  </ion-card-content>
+</ion-card>
 `;
 }
 
@@ -680,11 +683,16 @@ function iniciarPageListadoMovimientos() {
 }
 
 // --------------------------------------------
+// ---------- Detalle movimientos -------------
+// --------------------------------------------
+function iniciarPageListadoMovimientosDetalle() {}
+
+// --------------------------------------------
 // -------------- Log out ---------------------
 // --------------------------------------------
 function manejarLogOut() {
-  token = null;
+  token = undefined;
   guardarSesionUsuario(token);
-  guardarIdUsuario(null);
+  guardarIdUsuario(undefined);
   navegar("/");
 }

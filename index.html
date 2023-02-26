@@ -34,6 +34,11 @@
         <ion-route url="/gastos" component="page-gastos"></ion-route>
         <ion-route url="/movimientos" component="page-movimientos"></ion-route>
         <ion-route
+          url="/movimientos-detalle"
+          component="page-movimientos-detalle"
+        ></ion-route>
+
+        <ion-route
           url="/menuPrincipal"
           component="page-menuPrincipal"
         ></ion-route>
@@ -454,6 +459,39 @@
           <ion-content class="ion-padding-horizontal">
             <h1 class="ion-text-center">Mis movimientos</h1>
             <div id="listadoMovimientos"></div>
+          </ion-content>
+
+          <!--Footer-->
+          <ion-footer>
+            <ion-toolbar color="primary">
+              <ion-title class="ion-text-center">Obligatorio 2023</ion-title>
+            </ion-toolbar>
+          </ion-footer>
+        </ion-page>
+
+        <!--Pagina - Movimientos-->
+        <ion-page class="ion-page" id="page-movimientos-detalle">
+          <!--Contenido-->
+          <ion-header>
+            <ion-toolbar color="primary">
+              <ion-buttons slot="start">
+                <ion-back-button default-href="/menu"></ion-back-button>
+              </ion-buttons>
+              <ion-buttons slot="primary">
+                <ion-button id="btnLogOut" fill="outline">
+                  Cerrar Sesion
+                  <ion-icon slot="end" name="log-out"></ion-icon>
+                </ion-button>
+              </ion-buttons>
+              <ion-title>Detalle Movimiento</ion-title>
+              <ion-buttons slot="start">
+                <ion-menu-button menu="menu-principal"></ion-menu-button>
+              </ion-buttons>
+            </ion-toolbar>
+          </ion-header>
+          <ion-content class="ion-padding-horizontal">
+            <h1 class="ion-text-center">Detalle Movimiento</h1>
+            <div id="movimientoDetalle"></div>
           </ion-content>
 
           <!--Footer-->
